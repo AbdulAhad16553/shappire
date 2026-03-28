@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+  <defs>
+    <linearGradient id="c" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f0f0f2"/>
+      <stop offset="100%" stop-color="#d4d4dc"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="720" fill="url(#c)"/>
+  <rect x="80" y="80" width="1040" height="560" fill="none" stroke="#a8a8b8" stroke-width="1" opacity="0.5"/>
+  <text x="600" y="330" text-anchor="middle" font-family="Georgia,serif" font-size="42" fill="#2b2b32">WEST</text>
+  <text x="600" y="390" text-anchor="middle" font-family="system-ui,sans-serif" font-size="16" letter-spacing="0.35em" fill="#5c5c68">SPRING SUMMER &apos;26</text>
+</svg>
