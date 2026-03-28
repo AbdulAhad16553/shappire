@@ -147,7 +147,7 @@ export function getProductBySlug(slug: string) {
   return products.find((p) => p.slug === slug);
 }
 
-export function getByCategory(slug: CategorySlug | string) {
+export function getByCategory(slug: CategorySlug | "all") {
   if (slug === "all") return products;
   return products.filter((p) => p.category === slug);
 }

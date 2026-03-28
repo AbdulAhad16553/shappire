@@ -1,4 +1,6 @@
-export function IconMenu(props: React.SVGProps<SVGSVGElement>) {
+import type { SVGProps } from "react";
+
+export function IconMenu(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden {...props}>
       <path d="M4 7h16M4 12h16M4 17h16" strokeLinecap="round" />
@@ -6,7 +8,7 @@ export function IconMenu(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-export function IconSearch(props: React.SVGProps<SVGSVGElement>) {
+export function IconSearch(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden {...props}>
       <circle cx="11" cy="11" r="6" />
@@ -15,7 +17,7 @@ export function IconSearch(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-export function IconUser(props: React.SVGProps<SVGSVGElement>) {
+export function IconUser(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden {...props}>
       <path d="M20 21a8 8 0 10-16 0" strokeLinecap="round" />
@@ -24,7 +26,7 @@ export function IconUser(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-export function IconBag(props: React.SVGProps<SVGSVGElement>) {
+export function IconBag(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden {...props}>
       <path d="M6 8h12l1 14H5L6 8z" strokeLinejoin="round" />
@@ -33,18 +35,10 @@ export function IconBag(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-export function IconClose(props: React.SVGProps<SVGSVGElement>) {
+export function IconClose(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden {...props}>
       <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-export function IconChevronRight(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden {...props}>
-      <path d="M9 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
