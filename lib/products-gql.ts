@@ -234,16 +234,7 @@ function mapProduct(row: GqlProduct): Product {
             : undefined,
       };
     })
-    .filter((variation): variation is {
-      id: string;
-      sku?: string;
-      label: string;
-      size?: string;
-      price: number;
-      compareAtPrice?: number;
-    } =>
-      Boolean(variation),
-    );
+    .filter((variation): variation is NonNullable<typeof variation> => variation !== null);
 
   const variationPrices = mappedVariations
     .map((variation) => variation.price)
