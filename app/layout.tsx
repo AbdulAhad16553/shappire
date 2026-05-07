@@ -5,6 +5,7 @@ import { Providers } from "./providers";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { SITE } from "@/lib/data";
+import { getStoreNavSections } from "@/lib/products-gql";
 
 const display = Cormorant_Garamond({
   variable: "--font-display",
@@ -21,25 +22,27 @@ const sans = DM_Sans({
 export const metadata: Metadata = {
   title: `${SITE.name} — ${SITE.tagline}`,
   description:
-    "Fashion storefront demo — ready to wear, unstitched, west, and modest wear.",
+    "Luxury fashion storefront — Libas e Insha.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const navSections = await getStoreNavSections();
+
   return (
     <html
       lang="en"
       className={`${display.variable} ${sans.variable} h-full scroll-smooth antialiased`}
     >
-      <body className="flex min-h-screen flex-col bg-white font-[family-name:var(--font-sans)] text-stone-950">
+      <body className="flex min-h-screen flex-col bg-[var(--background)] font-[family-name:var(--font-sans)] text-stone-950">
         <Providers>
-          <p className="bg-stone-900 py-2.5 text-center text-[10px] font-medium uppercase tracking-[0.28em] text-white">
-            Spring Summer &apos;26 · International delivery · Demo storefront
+          <p className="bg-[#181818] py-2.5 text-center text-[10px] font-medium uppercase tracking-[0.28em] text-[#deceb0]">
+            Libas e Insha · Wear Elegance · International delivery
           </p>
-          <SiteHeader />
+          <SiteHeader navSections={navSections} />
           <main className="flex-1">{children}</main>
           <SiteFooter />
         </Providers>

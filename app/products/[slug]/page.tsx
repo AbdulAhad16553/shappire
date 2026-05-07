@@ -1,19 +1,12 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProductBySlug, products } from "@/lib/data";
-import { AddToCart } from "@/components/add-to-cart";
+import { ProductGallery } from "@/components/product-gallery";
+import { ProductPurchasePanel } from "@/components/product-purchase-panel";
+import { getStoreProductBySlug, getStoreProducts } from "@/lib/products-gql";
 
-export function generateStaticParams() {
-  return products.map((p) => ({ slug: p.slug }));
-}
-
-function formatPrice(n: number, currency: string) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency,
-    minimumFractionDigits: 0,
-  }).format(n);
+export async function generateStaticParams() {
+  const all = await getStoreProducts();
+  return all.map((p) => ({ slug: p.slug }));
 }
 
 export default async function ProductPage({
@@ -22,9 +15,9 @@ export default async function ProductPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getStoreProductBySlug(slug);
   if (!product) notFound();
-
+  const gallery = product.gallery?.length ? product.gallery : [product.image];
   return (
     <div className="mx-auto max-w-[1400px] px-4 py-10 md:px-6 md:py-14">
       <nav className="text-xs text-stone-500">
@@ -43,17 +36,7 @@ export default async function ProductPage({
       </nav>
 
       <div className="mt-8 grid gap-10 md:grid-cols-2 lg:gap-16">
-        <div className="relative aspect-[3/4] w-full overflow-hidden bg-stone-100">
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            className="object-cover"
-            priority
-            sizes="(max-width:768px) 100vw, 50vw"
-            unoptimized
-          />
-        </div>
+        <ProductGallery images={gallery} alt={product.name} />
         <div>
           {product.newIn && (
             <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-stone-500">
@@ -64,39 +47,20 @@ export default async function ProductPage({
             {product.name}
           </h1>
           <p className="mt-2 text-sm text-stone-600">{product.subtitle}</p>
-          <p className="mt-6 text-xl text-stone-900">
-            {formatPrice(product.price, product.currency)}
-          </p>
-          <p className="mt-4 text-xs uppercase tracking-[0.15em] text-stone-500">
-            SKU {product.id}
-          </p>
-
-          <div className="mt-8 space-y-4">
-            <div>
-              <label className="text-xs font-semibold uppercase tracking-[0.15em] text-stone-700">
-                Size
-              </label>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {["XS", "S", "M", "L", "XL"].map((s) => (
-                  <button
-                    key={s}
-                    type="button"
-                    className="min-w-[44px] border border-stone-300 px-3 py-2 text-sm hover:border-stone-900"
-                  >
-                    {s}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <AddToCart product={product} />
-          </div>
+          <ProductPurchasePanel product={product} />
 
           <div className="mt-10 border-t border-stone-200 pt-8 text-sm leading-relaxed text-stone-600">
             <p>
-              Dummy product detail — fabrics, care, and fit notes would live here.
-              Designed for a luxury fashion layout: generous imagery, clear price,
-              and a decisive add-to-bag path.
+              {product.description ??
+                "Dummy product detail — fabrics, care, and fit notes would live here. Designed for a luxury fashion layout: generous imagery, clear price, and a decisive add-to-bag path."}
             </p>
+            {product.details?.length ? (
+              <ul className="mt-4 space-y-2">
+                {product.details.map((detail) => (
+                  <li key={detail}>{detail}</li>
+                ))}
+              </ul>
+            ) : null}
           </div>
         </div>
       </div>

@@ -2,22 +2,23 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   collectionMeta,
-  getByCategory,
-  type CategorySlug,
 } from "@/lib/data";
 import { ProductCard } from "@/components/product-card";
+import { getStoreCategories, getStoreProductCats, getStoreProductsByCategory } from "@/lib/products-gql";
 
-const valid = new Set([
-  "all",
-  "ready-to-wear",
-  "unstitched",
-  "west",
-  "modest-wear",
-  "accessories",
-]);
+export const dynamic = "force-dynamic";
 
-export function generateStaticParams() {
-  return [...valid].map((slug) => ({ slug }));
+export async function generateStaticParams() {
+  const categories = await getStoreCategories();
+  const productCats = await getStoreProductCats();
+  const categorySlugs = productCats
+    .filter((cat) => cat.type === "category")
+    .map((cat) => cat.slug);
+  return [
+    { slug: "all" },
+    ...categories.map((c) => ({ slug: c.slug })),
+    ...categorySlugs.map((slug) => ({ slug })),
+  ];
 }
 
 export default async function CollectionPage({
@@ -26,18 +27,29 @@ export default async function CollectionPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  const categories = await getStoreCategories();
+  const productCats = await getStoreProductCats();
+  const valid = new Set([
+    "all",
+    ...categories.map((c) => c.slug),
+    ...productCats.filter((cat) => cat.type === "category").map((cat) => cat.slug),
+  ]);
   if (!valid.has(slug)) notFound();
 
-  const list = getByCategory(
-    slug === "all" ? "all" : (slug as CategorySlug),
-  );
+  const list = await getStoreProductsByCategory(slug === "all" ? "all" : slug);
+  const dynamicMeta = categories.find((c) => c.slug === slug);
+  const dynamicCategoryMeta = productCats.find((c) => c.type === "category" && c.slug === slug);
   const meta =
     slug === "all"
       ? {
           title: "All products",
           description: "Browse the full catalog — new arrivals and classics.",
         }
-      : collectionMeta[slug];
+      : dynamicMeta
+        ? { title: dynamicMeta.title, description: dynamicMeta.description }
+        : dynamicCategoryMeta
+          ? { title: dynamicCategoryMeta.name, description: `${dynamicCategoryMeta.name} products` }
+        : collectionMeta[slug];
 
   return (
     <div className="mx-auto max-w-[1400px] px-4 py-10 md:px-6 md:py-14">

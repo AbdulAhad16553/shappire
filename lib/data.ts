@@ -1,27 +1,36 @@
-export type CategorySlug =
-  | "ready-to-wear"
-  | "unstitched"
-  | "west"
-  | "modest-wear"
-  | "accessories";
+export type CategorySlug = string;
 
 export type Product = {
   id: string;
+  sku?: string;
   slug: string;
   name: string;
   subtitle: string;
   price: number;
+  compareAtPrice?: number;
   currency: string;
   category: CategorySlug;
   collection: string;
   image: string;
+  gallery?: string[];
   newIn?: boolean;
+  sizes?: string[];
+  description?: string;
+  details?: string[];
+  variations?: {
+    id: string;
+    sku?: string;
+    label: string;
+    size?: string;
+    price: number;
+    compareAtPrice?: number;
+  }[];
   tags: string[];
 };
 
 export const SITE = {
-  name: "Aurelia",
-  tagline: "Unstitched & Pret — Spring Summer '26",
+  name: "Libas e Insha",
+  tagline: "Wear Elegance",
 };
 
 export const navDrawer: { title: string; href: string; children?: { label: string; href: string }[] }[] = [
@@ -119,7 +128,7 @@ const names: [string, string, string][] = [
   ["Crinkle Hijab Pack", "modest-wear", "Modest SS '26"],
 ];
 
-export const products: Product[] = names.map(([name, cat, sub], idx) => {
+const generatedProducts: Product[] = names.map(([name, cat, sub], idx) => {
   const category = cat as CategorySlug;
   const slug = name
     .toLowerCase()
@@ -142,6 +151,59 @@ export const products: Product[] = names.map(([name, cat, sub], idx) => {
     tags: ["Spring", category],
   };
 });
+
+const featuredProducts: Product[] = [
+  {
+    id: "sku-libas-e-insha-001",
+    slug: "libas-e-insha-premium-lawn-farshi-shalwar",
+    name: "Libas e Insha",
+    subtitle: "Premium Lawn | Farshi Shalwar",
+    price: 6499,
+    currency: "PKR",
+    category: "ready-to-wear",
+    collection: "Ready to Wear",
+    image: "/images/products/libas-e-insha-1.png",
+    gallery: [
+      "/images/products/libas-e-insha-1.png",
+      "/images/products/libas-e-insha-2.png",
+      "/images/products/libas-e-insha-3.png",
+    ],
+    newIn: true,
+    sizes: ["S", "M", "L"],
+    description:
+      "A premium lawn 2-piece suit by Libas e Insha with a graceful farshi shalwar silhouette and signature floral detailing.",
+    details: [
+      "Fabric: Premium Lawn",
+      "Style: Farshi Shalwar",
+      "Available sizes: Small, Medium, Large",
+      "Includes coordinated shirt and bottom",
+    ],
+    tags: ["Premium Lawn", "Farshi Shalwar", "ready-to-wear"],
+  },
+  {
+    id: "sku-libas-e-insha-002",
+    slug: "libas-e-insha-premium-quality-lawn-cotton",
+    name: "Libas e Insha",
+    subtitle: "Premium Quality Lawn Cotton",
+    price: 7499,
+    currency: "PKR",
+    category: "ready-to-wear",
+    collection: "Ready to Wear",
+    image: "/images/products/libas-e-insha-lawn-cotton-1.png",
+    gallery: ["/images/products/libas-e-insha-lawn-cotton-1.png"],
+    newIn: true,
+    description:
+      "Libas e Insha premium quality lawn cotton suit designed for everyday elegance with soft feel and refined finish.",
+    details: [
+      "Fabric: Premium Quality Lawn Cotton",
+      "Price: PKR 7,499",
+      "Comfortable for daily and occasion wear",
+    ],
+    tags: ["Premium Lawn Cotton", "ready-to-wear"],
+  },
+];
+
+export const products: Product[] = [...featuredProducts, ...generatedProducts];
 
 export function getProductBySlug(slug: string) {
   return products.find((p) => p.slug === slug);

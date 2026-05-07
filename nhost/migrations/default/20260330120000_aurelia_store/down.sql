@@ -1,0 +1,9 @@
+DROP TABLE IF EXISTS public.nav_links CASCADE;
+DROP TABLE IF EXISTS public.nav_sections CASCADE;
+DROP TABLE IF EXISTS public.home_pills CASCADE;
+DROP TABLE IF EXISTS public.inspiration_quotes CASCADE;
+DROP TABLE IF EXISTS public.trend_tiles CASCADE;
+DROP TABLE IF EXISTS public.hero_slides CASCADE;
+DROP TABLE IF EXISTS public.products CASCADE;
+DROP TABLE IF EXISTS public.categories CASCADE;
+DROP TABLE IF EXISTS public.site_settings CASCADE;

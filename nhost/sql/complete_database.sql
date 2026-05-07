@@ -1,0 +1,4 @@
+-- Full Aurelia database setup (Nhost / Postgres)
+-- Step A: run the contents of nhost/migrations/default/20260330120000_aurelia_store/up.sql
+-- Step B: run nhost/sql/seed.sql (regenerate with: npx tsx scripts/generate-nhost-seed.ts from repo root)
+-- Then open Hasura and track all public tables; add array relationship nav_sections -> nav_links.

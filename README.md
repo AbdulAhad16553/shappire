@@ -16,6 +16,12 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Environment Setup (Nhost + GraphQL)
+
+1. Copy `.env.example` to `.env.local`.
+2. Fill in your Nhost project URLs and `NHOST_ADMIN_SECRET`.
+3. Restart the dev server after changing env values.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.

@@ -3,14 +3,14 @@ import { SITE } from "@/lib/data";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-stone-200 bg-[#f7f5f2]">
+    <footer className="border-t border-stone-700/20 bg-[#d8c8aa]">
       <div className="mx-auto grid max-w-[1400px] gap-10 px-4 py-14 md:grid-cols-4 md:px-6">
         <div>
           <p className="font-[family-name:var(--font-display)] text-lg tracking-[0.25em] text-stone-900">
             {SITE.name.toUpperCase()}
           </p>
-          <p className="mt-3 text-sm leading-relaxed text-stone-600">
-            {SITE.tagline}. Crafted for international delivery — dummy storefront for layout demo.
+          <p className="mt-3 text-sm leading-relaxed text-stone-700">
+            {SITE.tagline}. Crafted for timeless looks and modern elegance.
           </p>
         </div>
         <div>
@@ -68,8 +68,8 @@ export function SiteFooter() {
           </p>
         </div>
       </div>
-      <div className="border-t border-stone-200/80 py-6 text-center text-xs text-stone-500">
-        © {new Date().getFullYear()} {SITE.name}. Dummy site — not affiliated with any retailer.
+      <div className="border-t border-stone-700/20 py-6 text-center text-xs text-stone-700">
+        © {new Date().getFullYear()} {SITE.name}. All rights reserved.
       </div>
     </footer>
   );

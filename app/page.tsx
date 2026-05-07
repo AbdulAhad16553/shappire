@@ -1,34 +1,48 @@
 import Image from "next/image";
 import Link from "next/link";
-import { inspiration, products, SITE, trendTiles } from "@/lib/data";
+import { SITE, trendTiles } from "@/lib/data";
 import { ProductCard } from "@/components/product-card";
 import { HomeTrending } from "@/components/home-trending";
+import {
+  getStoreCategories,
+  getStoreInspirations,
+  getStoreNavSections,
+  getStoreProductCats,
+  getStoreProducts,
+} from "@/lib/products-gql";
 
-const heroes = [
-  {
-    title: "Ready to Wear",
-    subtitle: "Spring Summer '26",
-    href: "/collections/ready-to-wear",
-    image: "/images/hero-rtw.svg",
-  },
-  {
-    title: "Unstitched",
-    subtitle: "Spring Summer '26",
-    href: "/collections/unstitched",
-    image: "/images/hero-unstitched.svg",
-  },
-  {
-    title: "West",
-    subtitle: "Spring Summer '26",
-    href: "/collections/west",
-    image: "/images/hero-west.svg",
-  },
-];
-
-const pills = ["Sukoon", "Andaaz", "Smart Casual", "Casual", "Tops | Shirts", "Belts"];
-
-export default function HomePage() {
-  const newIn = products.filter((_, i) => i < 8);
+export default async function HomePage() {
+  const allProducts = await getStoreProducts();
+  const collections = await getStoreCategories();
+  const navSections = await getStoreNavSections();
+  const inspiration = await getStoreInspirations();
+  const productCats = await getStoreProductCats();
+  const flaggedNewIn = allProducts.filter((p) => p.newIn);
+  const newIn = (flaggedNewIn.length ? flaggedNewIn : allProducts).slice(0, 8);
+  const dynamicProductCats = productCats
+    .filter((c) => c.type === "category")
+    .slice(0, 10);
+  const pills = dynamicProductCats.length
+    ? dynamicProductCats
+    : inspiration.slice(0, 6).map((item) => ({
+        name: item.name,
+        slug: item.slug,
+      }));
+  const heroImageBySlug: Record<string, string> = {
+    "ready-to-wear": "/images/hero-rtw.svg",
+    unstitched: "/images/hero-unstitched.svg",
+    west: "/images/hero-west.svg",
+  };
+  const heroes = (collections.length ? collections : [
+    { slug: "ready-to-wear", title: "Ready to Wear", description: "Spring Summer '26" },
+    { slug: "unstitched", title: "Unstitched", description: "Spring Summer '26" },
+    { slug: "west", title: "West", description: "Spring Summer '26" },
+  ]).slice(0, 3).map((collection) => ({
+    title: collection.title,
+    subtitle: collection.description || "Spring Summer '26",
+    href: `/collections/${collection.slug}`,
+    image: collection.image || heroImageBySlug[collection.slug] || "/images/hero-rtw.svg",
+  }));
 
   return (
     <>
@@ -86,13 +100,14 @@ export default function HomePage() {
           </Link>
         </div>
         <div className="mx-auto mt-10 flex max-w-[1400px] flex-wrap justify-center gap-2 px-4 md:px-6">
-          {pills.map((p) => (
-            <span
-              key={p}
-              className="rounded-full border border-stone-200 bg-stone-50 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-stone-700"
+          {pills.map((pill) => (
+            <Link
+              key={`${pill.slug}-${pill.name}`}
+              href={`/collections/${pill.slug}`}
+              className="rounded-full border border-stone-200 bg-stone-50 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-stone-700 hover:border-stone-400 hover:bg-stone-100"
             >
-              {p}
-            </span>
+              {pill.name}
+            </Link>
           ))}
         </div>
         <div className="mx-auto mt-12 grid max-w-[1400px] grid-cols-2 gap-x-4 gap-y-10 px-4 md:grid-cols-4 md:px-6">
@@ -104,41 +119,14 @@ export default function HomePage() {
 
       <section className="border-y border-stone-200 bg-[#f7f5f2] py-14 md:py-20">
         <div className="mx-auto grid max-w-[1400px] gap-10 px-4 md:grid-cols-2 md:gap-16 md:px-6 lg:grid-cols-4">
-          <CategoryBlock
-            title="Ready to Wear"
-            body="Enduring artistry and elegance crafted to perfection."
-            links={[
-              { label: "Shirts", href: "/collections/ready-to-wear" },
-              { label: "Bottoms", href: "/collections/ready-to-wear" },
-              { label: "Dupattas", href: "/collections/ready-to-wear" },
-            ]}
-          />
-          <CategoryBlock
-            title="Unstitched"
-            body="New and refined concepts for every occasion."
-            links={[
-              { label: "Sukoon", href: "/collections/unstitched" },
-              { label: "Andaaz", href: "/collections/unstitched" },
-              { label: "Raunak", href: "/collections/unstitched" },
-            ]}
-          />
-          <CategoryBlock
-            title="West"
-            body="Pieces that stack, shift and adapt with the season."
-            links={[
-              { label: "Tops", href: "/collections/west" },
-              { label: "Dresses", href: "/collections/west" },
-              { label: "Trousers", href: "/collections/west" },
-            ]}
-          />
-          <CategoryBlock
-            title="Modest Wear"
-            body="Contemporary silhouettes, elegant hues, airy fabrics."
-            links={[
-              { label: "Abayas", href: "/collections/modest-wear" },
-              { label: "Hijabs", href: "/collections/modest-wear" },
-            ]}
-          />
+          {navSections.slice(0, 4).map((section) => (
+            <CategoryBlock
+              key={section.href}
+              title={section.title}
+              body="Curated dynamic storefront collection."
+              links={section.children.length ? section.children : [{ label: "Shop now", href: section.href }]}
+            />
+          ))}
         </div>
       </section>
 
@@ -193,6 +181,8 @@ export default function HomePage() {
     </>
   );
 }
+
+export const dynamic = "force-dynamic";
 
 function CategoryBlock({
   title,

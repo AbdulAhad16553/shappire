@@ -4,14 +4,18 @@ import Link from "next/link";
 import { useEffect } from "react";
 import { navDrawer } from "@/lib/data";
 import { IconClose } from "@/components/icons";
+import type { StoreNavSection } from "@/lib/products-gql";
 
 export function MobileDrawer({
   open,
   onClose,
+  sections,
 }: {
   open: boolean;
   onClose: () => void;
+  sections?: StoreNavSection[];
 }) {
+  const drawerSections = sections && sections.length ? sections : navDrawer;
   useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
@@ -53,7 +57,7 @@ export function MobileDrawer({
         </div>
         <nav className="flex-1 overflow-y-auto px-2 py-4">
           <ul className="space-y-1">
-            {navDrawer.map((section) => (
+            {drawerSections.map((section) => (
               <li key={section.title} className="border-b border-stone-200/60 py-3">
                 <Link
                   href={section.href}

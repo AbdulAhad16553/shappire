@@ -3,9 +3,10 @@ import Link from "next/link";
 import type { Product } from "@/lib/data";
 
 function formatPrice(n: number, currency: string) {
+  const safeCurrency = /^[A-Z]{3}$/.test(currency) ? currency : "PKR";
   return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency,
+    currency: safeCurrency,
     minimumFractionDigits: 0,
   }).format(n);
 }

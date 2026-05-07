@@ -6,6 +6,7 @@ import { SITE } from "@/lib/data";
 import { useCart } from "@/contexts/cart-context";
 import { IconBag, IconMenu, IconSearch, IconUser } from "@/components/icons";
 import { MobileDrawer } from "@/components/mobile-drawer";
+import type { StoreNavSection } from "@/lib/products-gql";
 
 const desktopNav = [
   { label: "Ready to Wear", href: "/collections/ready-to-wear" },
@@ -15,14 +16,18 @@ const desktopNav = [
   { label: "New In", href: "/collections/all" },
 ];
 
-export function SiteHeader() {
+export function SiteHeader({ navSections }: { navSections?: StoreNavSection[] }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const { lines, setOpen } = useCart();
   const count = lines.reduce((n, l) => n + l.qty, 0);
+  const primaryNav =
+    navSections && navSections.length
+      ? navSections.map((s) => ({ label: s.title, href: s.href }))
+      : desktopNav;
 
   return (
     <>
-      <header className="sticky top-0 z-30 border-b border-stone-200/80 bg-white/95 backdrop-blur">
+      <header className="sticky top-0 z-30 border-b border-stone-700/20 bg-[#deceb0]/95 backdrop-blur">
         <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-4 px-4 py-3 md:px-6">
           <div className="flex min-w-0 flex-1 items-center gap-2 md:gap-4">
             <button
@@ -43,7 +48,7 @@ export function SiteHeader() {
             </button>
             <Link
               href="/"
-              className="font-[family-name:var(--font-display)] text-xl tracking-[0.35em] text-stone-900 md:text-2xl"
+              className="font-[family-name:var(--font-display)] text-xl tracking-[0.28em] text-[#181818] md:text-2xl"
             >
               {SITE.name.toUpperCase()}
             </Link>
@@ -54,7 +59,7 @@ export function SiteHeader() {
             aria-label="Primary"
           >
             <ul className="flex flex-wrap items-center justify-center gap-6 text-[13px] uppercase tracking-[0.12em] text-stone-800">
-              {desktopNav.map((item) => (
+              {primaryNav.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
@@ -98,7 +103,7 @@ export function SiteHeader() {
           </div>
         </div>
       </header>
-      <MobileDrawer open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <MobileDrawer open={menuOpen} onClose={() => setMenuOpen(false)} sections={navSections} />
     </>
   );
 }
